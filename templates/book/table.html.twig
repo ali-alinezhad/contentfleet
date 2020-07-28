@@ -1,0 +1,53 @@
+<table class="table table-striped" id="books">
+    <thead>
+        <tr>
+            <td>Name</td>
+            <td>Release Date</td>
+            <td>Length</td>
+            <td class="pl-5">Genres</td>
+            <td>User Readable</td>
+            <td>Admin Readable</td>
+        </tr>
+    </thead>
+
+    {% if books is iterable %}
+        {% for book in books %}
+            <tr>
+            <td><a href="{{ path('book',{'id' : book.id}) }}">{{ book.name }}</a></td>
+            <td>{{ book.releaseDate|date('d-m-Y') }}</td>
+            <td>{{ book.length }}</td>
+            <td>
+                {% set genres = book.genres|split(',') %}
+                <ul>
+                    {% for genre in genres %}
+                        <li>
+                            <a href="{{ path('genre',{'genre' : genre}) }}">{{ genre }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </td>
+            <td>{{ book.userReadable }}</td>
+            <td>{{ book.adminReadable }}</td>
+            <td class="id" style="display: none">{{ book.id }}</td>
+        </tr>
+        {% endfor %}
+    {% else %}
+        <tr>
+            <td><a href="{{ path('book',{'id' : books.id}) }}">{{ books.name }}</a></td>
+            <td>{{ books.releaseDate|date('d-m-Y') }}</td>
+            <td>{{ books.length }}</td>
+            <td>
+                {% set genres = books.genres|split(',') %}
+                <ul>
+                    {% for genre in genres %}
+                        <li>
+                            <a href="{{ path('genre',{'genre' : genre}) }}">{{ genre }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </td>
+            <td>{{ books.userReadable }}</td>
+            <td>{{ books.adminReadable }}</td>
+        </tr>
+    {% endif %}
+</table>

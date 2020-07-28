@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Display all Books in this Genre {% endblock %}
+
+{% block body %}
+<div class="container">
+    <h2 class="p-4">All Books in this Genre</h2>
+    <div class="pb-3">
+        <a class="btn btn-primary" href="{{ path('index') }}">Back to Homepage</a>
+    </div>
+    {% include('./book/table.html.twig') %}
+</div>
+{% endblock %}

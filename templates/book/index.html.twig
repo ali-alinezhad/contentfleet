@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Home Page {% endblock %}
+
+{% block body %}
+<div class="container">
+    <h2 class="p-4">List of Books</h2>
+    {% include('./book/table.html.twig') %}
+    <button class="button btn btn-info">Load More</button>
+</div>
+{% endblock %}
+{% block javascripts %}
+<script>
+    $(document).ready(function() {
+        $('.button').click(function () {
+            var lastId = 0;
+            $('.id').each(function()
+            {
+                $this = parseInt( $(this).text() );
+                if ($this > lastId) lastId = $this;
+            });
+
+            $.ajax({
+                type: 'POST',
+                url: '/load',
+                data: {lastId: lastId},
+                dataType: 'json',
+                success: function (data) {
+                    for(i = 0; i < data.length; i++) {
+                       let book  = data[i];
+                       let genres = book['genres'].split(',');
+
+                        $('#books tr:last').after('<tr>' +
+                            '<td><a href="/book/'+ book['id']+'">'+ book['name'] +'</a></td>' +
+                            '<td>'+ book['release_date'] +'</td>' +
+                            '<td>'+ book['length'] +'</td>' +
+                            '<td><ul id='+ i + '></ul></td>'+
+                            '<td>'+ book['user_readable'] +'</td>' +
+                            '<td>'+ book['admin_readable'] +'</td>' +
+                            '<td class="id" style="display: none">'+ book['id'] +'</td>' +
+                            '</tr>');
+
+                        $.each(genres, function(index, value) {
+                            $('#'+i).append('<li><a href="/genre/'+ value+'">'+value+'</a></li>')
+                        })
+                    }
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    $('.button'). attr('disabled', true)
+                   alert('There is no more data')
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}
